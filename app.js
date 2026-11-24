@@ -1687,6 +1687,7 @@ function supportsItemMatcher(eventName, line, eventEntry) {
   if (/\bitem\b/i.test(details)) return true;
   const normalizedName = eventName.replace(/^(?:on|after|before)\s+/i, "");
   if (/^player (?:right|left) clicks (?:block|entity)\b/i.test(normalizedName)) return true;
+  if (supportsBlockSelector(eventEntry, eventName)) return false;
   return Boolean(getEventItemInfo(line).material);
 }
 
@@ -1775,13 +1776,14 @@ function findEventDocumentationEntry(eventName, eventLine) {
   const line = eventLine.trim().toLowerCase();
   const exactEntry = denizenEvents.find((entry) => entry.name.toLowerCase() === baseName);
   if (exactEntry) return exactEntry;
+  const exactExample = denizenEvents.find((entry) => entry.example && entry.example.trim().toLowerCase() === line);
+  if (exactExample) return exactExample;
   const matchingEntries = denizenEvents
     .filter((entry) => entry.pattern && eventPatternMatches(baseName, entry.pattern))
     .sort((left, right) =>
       eventPatternSpecificity(baseName, right.pattern) - eventPatternSpecificity(baseName, left.pattern)
     );
   return matchingEntries[0]
-    || denizenEvents.find((entry) => entry.example && entry.example.trim().toLowerCase() === line)
     || denizenEvents.find((entry) => {
       const sample = (entry.example || "")
         .replace(/^(?:on|after|before)\s+/i, "")
