@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111318">
+  <title>Denizen Blocks — редактор сценариев</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="language-welcome" id="language-welcome" role="dialog" aria-modal="true" aria-labelledby="language-welcome-title" hidden>
+      <section class="language-welcome-card">
+        <span class="language-welcome-brand">DENIZEN BLOCKS</span>
+        <h1 id="language-welcome-title">Choose your language <span>Выберите язык</span></h1>
+        <p>Select the interface language to get started · Выберите язык интерфейса</p>
+        <div class="language-welcome-grid">
+          <button type="button" class="language-welcome-option" data-first-language="ru"><img src="assets/languages/russia.png" alt=""><span>Русский</span></button>
+          <button type="button" class="language-welcome-option" data-first-language="en"><img src="assets/languages/united_kingdom.png" alt=""><span>English</span></button>
+          <button type="button" class="language-welcome-option" data-first-language="de"><img src="assets/languages/germany.png" alt=""><span>Deutsch</span></button>
+          <button type="button" class="language-welcome-option" data-first-language="pl"><img src="assets/languages/poland.png" alt=""><span>Polski</span></button>
+          <button type="button" class="language-welcome-option" data-first-language="es"><img src="assets/languages/spain.png" alt=""><span>Español</span></button>
+          <button type="button" class="language-welcome-option" data-first-language="uk"><img src="assets/languages/ukraine.png" alt=""><span>Українська</span></button>
+        </div>
+      </section>
+    </aside>
+    <header class="topbar">
+      <div class="brand-group">
+        <a class="brand" href="#" aria-label="Denizen Blocks, на главную">
+          <span class="brand-mark"><span></span><span></span><span></span></span>
+          <span class="brand-name">denizen<span>blocks</span></span>
+        </a>
+        <span class="beta-badge">BETA 0.23.4</span>
+      </div>
+      <div class="topbar-divider"></div>
+      <div class="project-label">
+        <span class="eyebrow">ПРОЕКТ</span>
+        <strong id="project-name">Новый проект</strong>
+      </div>
+      <div class="topbar-actions">
+        <details class="language-picker" id="language-picker">
+          <summary class="language-picker-button" aria-label="Выбрать язык">
+            <img id="selected-language-flag" src="assets/languages/russia.png" alt="">
+            <span class="language-picker-caret" aria-hidden="true">⌄</span>
+          </summary>
+          <div class="language-menu" role="listbox" aria-label="Язык интерфейса">
+            <button type="button" class="language-option" data-language="ru" role="option"><img src="assets/languages/russia.png" alt=""><span>Русский</span></button>
+            <button type="button" class="language-option" data-language="en" role="option"><img src="assets/languages/united_kingdom.png" alt=""><span>English</span></button>
+            <button type="button" class="language-option" data-language="de" role="option"><img src="assets/languages/germany.png" alt=""><span>Deutsch</span></button>
+            <button type="button" class="language-option" data-language="pl" role="option"><img src="assets/languages/poland.png" alt=""><span>Polski</span></button>
+            <button type="button" class="language-option" data-language="es" role="option"><img src="assets/languages/spain.png" alt=""><span>Español</span></button>
+            <button type="button" class="language-option" data-language="uk" role="option"><img src="assets/languages/ukraine.png" alt=""><span>Українська</span></button>
+          </div>
+        </details>
+        <span class="save-state"><i></i><span id="save-status">Все изменения сохранены</span></span>
+        <button class="button button-quiet" id="upload-button" type="button">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 13V3m0 0L6.5 6.5M10 3l3.5 3.5M4 12.5v3A1.5 1.5 0 0 0 5.5 17h9a1.5 1.5 0 0 0 1.5-1.5v-3"/></svg>
+          Открыть файлы
+        </button>
+        <button class="button button-primary" id="download-button" type="button">
+          Скачать .dsc
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v10m0 0 3.5-3.5M10 13 6.5 9.5M4 14v2a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-2"/></svg>
+        </button>
+      </div>
+      <input id="file-input" type="file" accept=".dsc,.yml,.yaml,text/plain" multiple hidden>
+    </header>
+
+    <main class="workspace">
+      <aside class="sidebar">
+        <div class="sidebar-heading">
+          <div>
+            <span class="eyebrow">РАБОЧАЯ ОБЛАСТЬ</span>
+            <h1>Мои скрипты</h1>
+          </div>
+          <button class="icon-button" id="new-project-button" type="button" aria-label="Создать новый проект" title="Новый проект">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4v12M4 10h12"/></svg>
+          </button>
+        </div>
+        <div class="file-card">
+          <span class="file-icon">D</span>
+          <div class="file-meta">
+            <strong id="file-name">пример.dsc</strong>
+            <span id="file-detail">Denizen script</span>
+          </div>
+          <span class="file-dot"></span>
+        </div>
+        <div class="list-heading"><span>ФАЙЛЫ И СКРИПТЫ</span><span id="script-count">0</span></div>
+        <nav id="script-list" class="script-list" aria-label="Скрипты"></nav>
+        <div class="sidebar-footer">
+          <div class="help-icon">?</div>
+          <div><strong>Работает локально</strong><span>Файл не отправляется на сервер</span><button class="storage-settings-button" id="storage-settings" type="button">Настройки сохранения</button></div>
+        </div>
+      </aside>
+
+      <section class="editor" aria-label="Редактор блоков">
+        <div class="editor-toolbar">
+          <div class="breadcrumb"><span>Проект</span><span class="crumb-slash">/</span><strong id="current-script-name">welcome</strong></div>
+          <div class="toolbar-right">
+            <div class="view-switch" role="group" aria-label="Режим редактора">
+              <button class="view-tab active" id="blocks-view-button" type="button" aria-pressed="true">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="4" width="14" height="5" rx="1.5"/><rect x="3" y="11" width="10" height="5" rx="1.5"/></svg>
+                Блоки
+              </button>
+              <button class="view-tab" id="code-view-button" type="button" aria-pressed="false">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7 5-5 5 5 5m6-10 5 5-5 5m-2-12-2 14"/></svg>
+                Код
+              </button>
+            </div>
+            <button class="icon-button" id="zoom-out" type="button" aria-label="Уменьшить масштаб">−</button>
+            <span class="zoom-label" id="zoom-label">100%</span>
+            <button class="icon-button" id="zoom-in" type="button" aria-label="Увеличить масштаб">+</button>
+          </div>
+        </div>
+        <div class="canvas-wrap" id="canvas-wrap">
+          <div class="canvas-grid"></div>
+          <div class="canvas-sticky-tools">
+            <section class="active-flags-panel" id="active-flags-panel" aria-live="polite"></section>
+          </div>
+          <div class="canvas-content" id="canvas-content"></div>
+          <div class="drop-overlay" id="drop-overlay">
+            <div class="drop-card"><span class="upload-large">↑</span><strong>Отпустите файлы, чтобы открыть</strong><span>Можно выбрать несколько .dsc</span></div>
+          </div>
+          <textarea id="code-editor" class="code-editor" spellcheck="false" aria-label="Исходный код Denizen"></textarea>
+          <div class="empty-state" id="empty-state" hidden>
+            <div class="empty-art"><span></span><span></span><span></span></div>
+            <h2>Здесь появятся ваши блоки</h2>
+            <p>Откройте один или несколько .dsc-файлов или начните с примера Denizen.</p>
+            <button class="button button-primary" id="empty-upload-button" type="button">Загрузить файлы</button>
+          </div>
+          <div class="canvas-hint"><span class="hint-key">⌘</span> + <span class="hint-key">колесо</span> — масштаб <span class="hint-separator">·</span> ПКМ по блоку — меню</div>
+        </div>
+      </section>
+
+      <aside class="inspector">
+        <div class="inspector-header"><div><span class="eyebrow">ИНСПЕКТОР</span><h2>Свойства блока</h2></div><button class="icon-button" type="button" aria-label="Дополнительные настройки"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="4" cy="10" r="1"/><circle cx="10" cy="10" r="1"/><circle cx="16" cy="10" r="1"/></svg></button></div>
+        <section class="validation-panel" id="validation-panel" aria-live="polite"></section>
+        <div id="inspector-content" class="inspector-content"></div>
+        <div class="block-library">
+          <div class="library-heading"><div><span class="eyebrow">КОМАНДЫ</span><h3>Добавить команду</h3></div><span class="library-count" id="command-count"></span></div>
+          <select class="event-category-select" id="command-category-filter" aria-label="Категория команд"></select>
+          <input class="event-search" id="command-search" type="search" placeholder="Найти команду..." aria-label="Поиск команд">
+          <div class="block-options" id="command-options"></div>
+          <p class="library-note">Щелчок добавит команду после выбранного блока. Синтаксис выбранной команды появится в инспекторе.</p>
+        </div>
+        <div class="event-library">
+          <div class="library-heading"><div><span class="eyebrow">СОБЫТИЯ</span><h3>Добавить событие</h3></div><span class="library-count" id="event-count">399</span></div>
+          <select class="event-category-select" id="event-category-filter" aria-label="Категория событий"></select>
+          <input class="event-search" id="event-search" type="search" placeholder="Найти событие..." aria-label="Поиск событий">
+          <div class="event-options" id="event-options" aria-live="polite"></div>
+          <p class="library-note">Выберите категорию или введите поиск. Щелчок по событию добавит его в активный скрипт.</p>
+        </div>
+      </aside>
+    </main>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <div class="block-context-menu" id="block-context-menu" role="menu" hidden>
+      <button type="button" id="context-copy" role="menuitem">Копировать блок</button>
+      <button type="button" id="context-paste" role="menuitem" disabled>Вставить после блока</button>
+      <span class="context-menu-divider"></span>
+      <button type="button" id="context-delete" role="menuitem" class="context-delete">Удалить блок</button>
+    </div>
+    <datalist id="item-textures"></datalist>
+    <div class="block-picker-modal" id="block-picker-modal" hidden>
+      <div class="block-picker-backdrop" data-block-picker-close>
+        <section class="block-picker-dialog" role="dialog" aria-modal="true" aria-labelledby="block-picker-title">
+          <header class="block-picker-header">
+            <div>
+              <span class="eyebrow">МАТЕРИАЛЫ MINECRAFT</span>
+              <h2 id="block-picker-title">Выберите блок</h2>
+            </div>
+            <button class="icon-button" id="block-picker-close" type="button" aria-label="Закрыть список блоков">×</button>
+          </header>
+          <input class="block-picker-search" id="block-picker-search" type="search" placeholder="Найти блок или текстуру…" aria-label="Поиск блока">
+          <div class="block-picker-count" id="block-picker-count" aria-live="polite"></div>
+          <div class="block-picker-grid" id="block-picker-grid" role="listbox" aria-label="Текстуры блоков"></div>
+        </section>
+      </div>
+    </div>
+    <aside class="privacy-notice" id="privacy-notice" role="dialog" aria-labelledby="privacy-title" hidden>
+      <div class="privacy-copy">
+        <strong id="privacy-title">Автосохранение проекта</strong>
+        <p>Для восстановления после перезагрузки сайт сохраняет .dsc и настройки в локальном хранилище браузера на этом устройстве, а не в cookie-файлах. Содержимое проекта никуда не отправляется.</p>
+      </div>
+      <div class="privacy-actions">
+        <button class="button button-primary" id="storage-accept" type="button">Разрешить сохранение</button>
+        <button class="button button-quiet" id="storage-decline" type="button">Не сохранять</button>
+      </div>
+    </aside>
+  </div>
+  <script src="item-index.js"></script>
+  <script src="block-index.js"></script>
+  <script src="events-index.js"></script>
+  <script src="commands-index.js"></script>
+  <script src="commands-docs.js"></script>
+  <script src="i18n.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
